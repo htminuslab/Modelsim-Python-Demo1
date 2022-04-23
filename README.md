@@ -41,8 +41,8 @@ link -dll /EXPORT:call_python_function /EXPORT:call_python_module /EXPORT:call_p
 3) Open the src/fli_python.c file and correct the path to the demo directory in line 63
 
 ```C
-	PyRun_SimpleString("sys.path.append(r'E:\\Modelsim-Python-Demo1')"); // CHANGE ME!!
-```	
+    PyRun_SimpleString("sys.path.append(r'E:\\Modelsim-Python-Demo1')"); // CHANGE ME!!
+``` 
 
 4) Install the constraint solver library via pip
 
@@ -65,11 +65,11 @@ Copyright (C) Microsoft Corporation.  All rights reserved.
 The design contains 2 foreign procedure calls, **call_python_module()** and **call_python_function()**. 
 
 ```VHDL
-	procedure call_python_module(module_name:in string);
-	attribute FOREIGN of call_python_module : procedure is "call_python_module ./fli_python.dll";	
-		
-	procedure call_python_function(function_name:in string; vhdl_array:OUT intarray);
-	attribute FOREIGN of call_python_function : procedure is "call_python_function ./fli_python.dll";	
+    procedure call_python_module(module_name:in string);
+    attribute FOREIGN of call_python_module : procedure is "call_python_module ./fli_python.dll";   
+        
+    procedure call_python_function(function_name:in string; vhdl_array:OUT intarray);
+    attribute FOREIGN of call_python_function : procedure is "call_python_function ./fli_python.dll";   
 ```
 
 The call_python_module() is used to load a module and call_python_function() calls a function inside the Python module. The FOREIGN attribute tells Modelsim which C function to call (call_python_module) and where it is located (/fli_python.dll). 
@@ -94,8 +94,8 @@ The first thing the testbench does is to call the Python module.
 
 ```VHDL
   begin
-    call_python_module("constraint_test");	
-	wait for 100 ns;
+    call_python_module("constraint_test");  
+    wait for 100 ns;
 ``` 
 The call_python_module("constraint_test") will initialize the Python interpreter and executes the **constraint_test.py** module. The constraint_test.py module solves a very simple constraint for a modbus serial frame which requires that the maximum number of bits (startbit, databits, parity, stopbits) must not exceed 10bits. The constraint solver then works out all the valid combinations and passes them back to the VHDL testbench for running the tests. In order to get one valid solution each time we run a VHDL test we use the Python generator concept (see **yield** and **get_next** in constraint_test.py).
   
